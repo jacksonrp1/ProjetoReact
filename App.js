@@ -16,7 +16,7 @@ export default function App() {
     <View style={styles.container}>
       <NavigationContainer>
         <Tab.Navigator
-          initialRouteName="Home"
+          initialRouteName="signup"
           screenOptions={{
             headerStyle: { height: 0 }
           }}

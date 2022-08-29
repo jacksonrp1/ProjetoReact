@@ -16,23 +16,23 @@ export default function SignIn({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <Text style={styles.h1Style}>Welcome Back!</Text>
-        <Text style={styles.h4Style}>Enter Your Username & Password</Text>
+        <Text style={styles.h1Style}>Seja Bem Vindo!</Text>
+        <Text style={styles.h4Style}>Faça o login em sua conta</Text>
       </View>
       <View style={styles.inputContainer}>
         <Input
           onChangeText={username => setUserName(username)}
-          placeholder="Username"
+          placeholder="Usuário"
         />
         <Input
           onChangeText={password => setUserPass(password)}
-          placeholder="Password"
+          placeholder="Senha"
         />
       </View>
       <View style={styles.buttonContainer}>
         <Button
           buttonStyle={{ backgroundColor: '#F25719', borderRadius: 25 }}
-          title="LOGIN"
+          title="ENTRAR"
           titleStyle={{ fontWeight: '500', fontSize: 23, marginHorizontal: 51 }}
           containerStyle={{
             width: 229,
@@ -44,20 +44,21 @@ export default function SignIn({ navigation }) {
             }
           }}
         />
-        <Text style={styles.h2Style}>Forgotten Passwoard?</Text>
+        <Text style={styles.h2Style}>Esqueceu sua senha?</Text>
         <Text
           onPress={() => {
             navigation.navigate('SignUp')
           }}
           style={styles.h5Style}
         >
-          Or Create a New Account
+          Cadastre-se!
         </Text>
       </View>
 
       <StatusBar style="auto" />
     </View>
   )
+ 
   function validationLogin() {
     if (userName === null || userName === '') {
       alert('Invalid login.')

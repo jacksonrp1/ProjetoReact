@@ -14,8 +14,8 @@ export default function Started({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.containerText}>
-        <Text style={styles.h1Style}>Let’s Get Started</Text>
-        <Text style={styles.h5Style}>Grow Together</Text>
+        <Text style={styles.h1Style}>Vamos Começar!</Text>
+        <Text style={styles.h5Style}>Evoluirmos Juntos</Text>
       </View>
       <Button
         buttonStyle={{
@@ -30,7 +30,7 @@ export default function Started({ navigation }) {
         onPress={() => {
           navigation.navigate('SignIn')
         }}
-        title="JOIN NOW"
+        title="JOGAR AGORA!"
       />
       <StatusBar style="auto" />
     </View>
@@ -52,6 +52,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter_900Black',
     color: '#F25719',
     fontSize: 15,
-    fontWeight: 'light'
+    fontWeight: 'light',
+    marginLeft: 10,
   }
 })
