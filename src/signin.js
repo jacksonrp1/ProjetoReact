@@ -1,12 +1,17 @@
 import React, { useState } from 'react'
 import { StatusBar } from 'expo-status-bar'
-import { Button, Input } from '@rneui/themed'
+import { Button, Input, Icon } from '@rneui/themed'
 import { View, Text, StyleSheet, Alert } from 'react-native'
 import { useFonts, Inter_900Black } from '@expo-google-fonts/inter'
 
 export default function SignIn({ navigation }) {
   const [userName, setUserName] = useState(null)
   const [userPass, setUserPass] = useState(null)
+  const [txt, setTxt] = useState(null)
+  const [typePass, setTypePass] = useState(true)
+  const [eye, setEye] = useState('eye-off')
+  const [msg, setMsg] = useState(null)
+
   let [fotsLoaded] = useFonts({
     Inter_900Black
   })
@@ -16,61 +21,123 @@ export default function SignIn({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <Text style={styles.h1Style}>Seja Bem Vindo!</Text>
-        <Text style={styles.h4Style}>Faça o login em sua conta</Text>
+        <Text style={styles.h1Style}>Welcome Back!</Text>
+        <Text style={styles.h4Style}>Enter Your Username & Password</Text>
       </View>
       <View style={styles.inputContainer}>
         <Input
-          onChangeText={username => setUserName(username)}
-          placeholder="Usuário"
+          onChangeText={username => {
+            if (username === '' || username === null) {
+              setTxt('')
+            }
+            setUserName(username)
+          }}
+          placeholder="Username"
         />
-        <Input
-          onChangeText={password => setUserPass(password)}
-          placeholder="Senha"
-        />
+        <View style={styles.pass}>
+          <Input
+            onChangeText={password => {
+              if (password === '' || password === null) {
+                setTxt('')
+              }
+              setUserPass(password)
+            }}
+            placeholder="Password"
+            secureTextEntry={typePass}
+          />
+          <View style={{ position: 'absolute', right: 10, top: 10, zIndex: 1 }}>
+            <Icon
+              type="feather"
+              name={eye}
+              onPress={() => validationTypePass()}
+            />
+          </View>
+        </View>
+        {txt}
+        {/* <Text style={{ color: '#FF1E00', fontWeight: 'bold' }}>{txt}</Text> */}
       </View>
       <View style={styles.buttonContainer}>
         <Button
           buttonStyle={{ backgroundColor: '#F25719', borderRadius: 25 }}
-          title="ENTRAR"
+          title="LOGIN"
           titleStyle={{ fontWeight: '500', fontSize: 23, marginHorizontal: 51 }}
           containerStyle={{
             width: 229,
             marginBottom: 18
           }}
           onPress={() => {
-            if (validationLogin()) {
-              navigation.navigate('Home')
-            }
+            validationUser()
           }}
         />
-        <Text style={styles.h2Style}>Esqueceu sua senha?</Text>
+        <Text style={styles.h2Style}>Forgotten Passwoard?</Text>
         <Text
           onPress={() => {
             navigation.navigate('SignUp')
           }}
           style={styles.h5Style}
         >
-          Cadastre-se!
+          Or Create a New Account
         </Text>
       </View>
 
       <StatusBar style="auto" />
     </View>
   )
- 
-  function validationLogin() {
+  async function validationUser() {
+    let req = await fetch(`http://192.168.1.100:8000/login`, {
+      cache: 'default',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      method: 'POST',
+      mode: 'cors',
+      body: JSON.stringify({
+        username: userName,
+        password: userPass
+      })
+    })
+    let res = await req.json()
+    if (validationLogin(res)) {
+      navigation.navigate('Home')
+    }
+  }
+  //Validação de login basica - provisório
+  function validationLogin(res) {
     if (userName === null || userName === '') {
-      alert('Invalid login.')
+      setTxt(
+        <Text style={{ color: '#FF1E00', fontWeight: 'bold' }}>
+          Invalid login.
+        </Text>
+      )
       return false
     } else if (userPass === null || userPass === '') {
-      alert('Invalid password.')
+      setTxt(
+        <Text style={{ color: '#FF1E00', fontWeight: 'bold' }}>
+          Invalid password.
+        </Text>
+      )
       return false
-    } else if (userName === 'Admin' && userPass === 'Admin') {
+    } else if (res.bol) {
+      setTxt(
+        <Text style={{ color: '#5FD068', fontWeight: 'bold' }}>{res.res}</Text>
+      )
       return true
-    } else {
-      alert('Incorrect login or password')
+    } else if (!res.bol) {
+      setTxt(
+        <Text style={{ color: '#FF1E00', fontWeight: 'bold' }}>{res.res}</Text>
+      )
       return false
+    }
+  }
+  //Validação para trocar o tipo do password para tipo texto e trocar icone do eye
+  function validationTypePass() {
+    if (typePass) {
+      setTypePass(false)
+      setEye('eye')
+    } else {
+      setTypePass(true)
+      setEye('eye-off')
     }
   }
 }
@@ -112,5 +179,10 @@ const styles = StyleSheet.create({
     color: '#F25719',
     fontWeight: '400',
     fontSize: 18
+  },
+  validationLoginTxt: {
+    color: 'red',
+    fontFamily: 'Inter_900Black'
+    // display: 'none'
   }
 })
