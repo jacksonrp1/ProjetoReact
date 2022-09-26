@@ -3,11 +3,11 @@ import { StatusBar } from 'expo-status-bar'
 import { StyleSheet, View, Text } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
-import { Button, Input } from '@rneui/themed'
+
 import Started from './src/getStarted'
 import SignIn from './src/signin'
 import SignUp from './src/signup'
-import Home from './src/home'
+import Routes from './src/routes.js'
 
 const Tab = createStackNavigator()
 
@@ -16,11 +16,16 @@ export default function App() {
     <View style={styles.container}>
       <NavigationContainer>
         <Tab.Navigator
-          initialRouteName="Home" //Home
+          initialRouteName="Started"
           screenOptions={{
             headerStyle: { height: 0 }
           }}
         >
+          <Tab.Screen
+            name="Routes"
+            component={Routes}
+            options={{ title: '', headerLeft: () => null }}
+          />
           <Tab.Screen
             name="Started"
             component={Started}
@@ -31,21 +36,21 @@ export default function App() {
             component={SignIn}
             options={{
               title: '',
-              headerTintColor: 'red',
-              headerLeft: props => <Text></Text>
+              headerLeft: () => null
             }}
           />
           <Tab.Screen
             name="SignUp"
             component={SignUp}
-            options={{ title: '', headerTintColor: '#F25719' }}
-          />
-          <Tab.Screen
-            name="Home"
-            component={Home}
             options={{
               title: '',
-              headerLeft: props => <Text></Text>
+              headerTintColor: '#F25719',
+              headerLeftContainerStyle: {
+                borderRadius: 50,
+                width: 50,
+                height: 40,
+                left: 10
+              }
             }}
           />
         </Tab.Navigator>

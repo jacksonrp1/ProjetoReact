@@ -14,8 +14,8 @@ export default function Started({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.containerText}>
-        <Text style={styles.h1Style}>Let’s Get Started</Text>
-        <Text style={styles.h5Style}>Grow Together</Text>
+        <Text style={styles.h1Style}>Vamos começar</Text>
+        <Text style={styles.h5Style}>Crescer juntos</Text>
       </View>
       <Button
         buttonStyle={{
@@ -30,7 +30,7 @@ export default function Started({ navigation }) {
         onPress={() => {
           navigation.navigate('SignIn')
         }}
-        title="JOIN NOW"
+        title="ENTRAR"
       />
       <StatusBar style="auto" />
     </View>
