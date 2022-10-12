@@ -1,10 +1,10 @@
 import React from 'react'
-import { StyleSheet, View, Text } from 'react-native'
+import { View, Text, StyleSheet } from 'react-native'
 
-export default function Profile() {
+export default function Jogos() {
   return (
     <View style={styles.container}>
-      <Text>Profile</Text>
+      <Text>Games</Text>
     </View>
   )
 }

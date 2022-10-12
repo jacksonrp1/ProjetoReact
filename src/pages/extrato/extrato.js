@@ -1,7 +1,7 @@
 import React from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 
-export default function Notification() {
+export default function Extrato() {
   return (
     <View style={styles.container}>
       <Text>Notification</Text>

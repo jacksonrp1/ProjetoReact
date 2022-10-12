@@ -16,7 +16,7 @@ import {
   Inter_300Light
 } from '@expo-google-fonts/inter'
 
-export default function Home() {
+export default function Investimento() {
   return (
     <View style={styles.container}>
       <Text>Home</Text>

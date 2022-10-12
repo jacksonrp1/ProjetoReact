@@ -3,17 +3,16 @@ import { StyleSheet } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
 // ROUTES
-import Home from './pages/Home'
-import Notification from './pages/Notification'
-import Games from './pages/Games'
-import Wallet from './pages/Wallet'
-import Profile from './pages/Profile'
+import Investimento from './pages/investimento/investimento.js'
+import Extrato from './pages/extrato/extrato.js'
+import Jogos from './pages/jogos/jogos.js'
+import Perfil from './pages/perfil/perfil.js'
 
 // IMPORT COMPONENTS
-import ButtonGame from './pages/components/ButtonGame.js'
+import ButtonGame from './pages/components/ButtonTabBar.js'
 
 // IMPORT ICONS
-import { Entypo, FontAwesome5, Octicons } from '@expo/vector-icons'
+import { FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons'
 
 const Tab = createBottomTabNavigator()
 
@@ -26,59 +25,91 @@ export default function Routes() {
           backgroundColor: '#121212',
           borderTopColor: 'transparent',
           paddingBottom: 20,
-          // paddingTop: 10,
-          height: 70
+          height: 75
         },
         tabBarActiveTintColor: '#fff'
       }}
     >
       <Tab.Screen
-        name="Home"
-        component={Home}
+        name="Investimento"
+        component={Investimento}
         options={{
-          tabBarIcon: ({ size, color }) => (
-            <Entypo name="home" size={size} color={color} />
+          tabBarIcon: ({ focused, size, color }) => (
+            <ButtonGame
+              size={size}
+              focused={focused}
+              icone={
+                //Encaminho o icone para o Componente para poder modificar seu tamanho e fundo
+                <FontAwesome5
+                  name="donate"
+                  size={!focused ? 30 : 40}
+                  color={color}
+                />
+              }
+            />
           )
         }}
       />
 
       <Tab.Screen
-        name="Notification"
-        component={Notification}
+        name="Extrato"
+        component={Extrato}
         options={{
-          tabBarIcon: ({ size, color }) => (
-            <Entypo name="notification" size={size} color={color} />
+          tabBarIcon: ({ focused, size, color }) => (
+            <ButtonGame
+              size={size}
+              focused={focused}
+              icone={
+                //Encaminho o icone para o Componente para poder modificar seu tamanho e fundo
+                <FontAwesome5
+                  name="money-check-alt"
+                  size={!focused ? 30 : 40}
+                  color={color}
+                />
+              }
+            />
           )
         }}
       />
 
       <Tab.Screen
-        name="Games"
-        component={Games}
+        name="Jogos"
+        component={Jogos}
         options={{
-          tabBarLabel: '',
-          tabBarIcon: ({ focused, size }) => (
-            <ButtonGame size={size} focused={focused} />
+          tabBarIcon: ({ focused, size, color }) => (
+            <ButtonGame
+              size={size}
+              focused={focused}
+              icone={
+                //Encaminho o icone para o Componente para poder modificar seu tamanho e fundo
+                <MaterialCommunityIcons
+                  name="cards-playing-spade"
+                  size={!focused ? 30 : 40}
+                  color={color}
+                />
+              }
+            />
           )
         }}
       />
 
       <Tab.Screen
-        name="Wallet"
-        component={Wallet}
+        name="Perfil"
+        component={Perfil}
         options={{
-          tabBarIcon: ({ size, color }) => (
-            <FontAwesome5 name="wallet" size={size} color={color} />
-          )
-        }}
-      />
-
-      <Tab.Screen
-        name="Profile"
-        component={Profile}
-        options={{
-          tabBarIcon: ({ size, color }) => (
-            <Octicons name="person" size={size} color={color} />
+          tabBarIcon: ({ focused, size, color }) => (
+            <ButtonGame
+              size={size}
+              focused={focused}
+              icone={
+                //Encaminho o icone para o Componente para poder modificar seu tamanho e fundo
+                <FontAwesome5
+                  name="user-tie"
+                  size={!focused ? 30 : 40}
+                  color={color}
+                />
+              }
+            />
           )
         }}
       />

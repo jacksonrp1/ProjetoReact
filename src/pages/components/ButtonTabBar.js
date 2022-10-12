@@ -1,22 +1,18 @@
 import React from 'react'
 import { View, StyleSheet } from 'react-native'
-import { FontAwesome5 } from '@expo/vector-icons'
+import { MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons'
 
-export default function ButtonGame({ focused, size }) {
+export default function ButtonGame({ focused, size, color, icone }) {
   return (
     <View
       style={[
-        styles.container,
+        focused ? styles.container : '',
         {
-          backgroundColor: focused ? 'red' : '#F25719'
+          backgroundColor: focused ? 'red' : 'transparent'
         }
       ]}
     >
-      <FontAwesome5
-        name="basketball-ball"
-        size={focused ? size + 5 : size}
-        color={focused ? '#fff' : '#000'}
-      />
+      {icone}
     </View>
   )
 }
