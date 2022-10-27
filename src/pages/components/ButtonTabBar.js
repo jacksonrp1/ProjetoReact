@@ -8,7 +8,7 @@ export default function ButtonGame({ focused, size, color, icone }) {
       style={[
         focused ? styles.container : '',
         {
-          backgroundColor: focused ? 'red' : 'transparent'
+          backgroundColor: focused ? '#d65a31' : 'transparent'
         }
       ]}
     >
@@ -20,12 +20,12 @@ const styles = StyleSheet.create({
   container: {
     width: 70,
     height: 50,
-    borderRadius: 10,
+    borderRadius: 5,
     backgroundColor: '#F25719',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: 15,
-    shadowColor: '#fff',
+    shadowColor: '#F25719',
     shadowOffset: {
       width: 0,
       height: 2

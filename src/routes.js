@@ -18,18 +18,7 @@ const Tab = createBottomTabNavigator()
 
 export default function Routes() {
   return (
-    <Tab.Navigator
-      screenOptions={{
-        headerStyle: { height: 0 },
-        tabBarStyle: {
-          backgroundColor: '#121212',
-          borderTopColor: 'transparent',
-          paddingBottom: 20,
-          height: 75
-        },
-        tabBarActiveTintColor: '#fff'
-      }}
-    >
+    <Tab.Navigator initialRouteName="Jogos" screenOptions={styles.ScreenOpt}>
       <Tab.Screen
         name="Investimento"
         component={Investimento}
@@ -39,7 +28,6 @@ export default function Routes() {
               size={size}
               focused={focused}
               icone={
-                //Encaminho o icone para o Componente para poder modificar seu tamanho e fundo
                 <FontAwesome5
                   name="donate"
                   size={!focused ? 30 : 40}
@@ -60,7 +48,6 @@ export default function Routes() {
               size={size}
               focused={focused}
               icone={
-                //Encaminho o icone para o Componente para poder modificar seu tamanho e fundo
                 <FontAwesome5
                   name="money-check-alt"
                   size={!focused ? 30 : 40}
@@ -81,7 +68,6 @@ export default function Routes() {
               size={size}
               focused={focused}
               icone={
-                //Encaminho o icone para o Componente para poder modificar seu tamanho e fundo
                 <MaterialCommunityIcons
                   name="cards-playing-spade"
                   size={!focused ? 30 : 40}
@@ -102,7 +88,6 @@ export default function Routes() {
               size={size}
               focused={focused}
               icone={
-                //Encaminho o icone para o Componente para poder modificar seu tamanho e fundo
                 <FontAwesome5
                   name="user-tie"
                   size={!focused ? 30 : 40}
@@ -119,5 +104,15 @@ export default function Routes() {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#777'
+  },
+  ScreenOpt: {
+    headerStyle: { height: 0 },
+    tabBarStyle: {
+      backgroundColor: '#121212',
+      borderTopColor: 'transparent',
+      paddingBottom: 20,
+      height: 75
+    },
+    tabBarActiveTintColor: '#fff'
   }
 })

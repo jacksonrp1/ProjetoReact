@@ -3,7 +3,6 @@ import React from 'react'
 import { StyleSheet, View, Text } from 'react-native'
 import { Button } from '@rneui/themed'
 import { useFonts, Inter_900Black } from '@expo-google-fonts/inter'
-
 export default function Started({ navigation }) {
   let [fotsLoaded] = useFonts({
     Inter_900Black
@@ -18,12 +17,8 @@ export default function Started({ navigation }) {
         <Text style={styles.h5Style}>Crescer juntos</Text>
       </View>
       <Button
-        buttonStyle={{
-          fontFamily: 'Inter_900Black',
-          backgroundColor: '#F25719',
-          borderRadius: 25
-        }}
-        titleStyle={{ fontWeight: '500', fontSize: 23, marginHorizontal: 51 }}
+        buttonStyle={styles.btnStyle}
+        titleStyle={btnTitleStyle}
         containerStyle={{
           marginVertical: 48
         }}
@@ -53,5 +48,15 @@ const styles = StyleSheet.create({
     color: '#F25719',
     fontSize: 15,
     fontWeight: 'light'
+  },
+  btnStyle: {
+    backgroundColor: '#F25719',
+    borderRadius: 25,
+    paddingHorizontal: 25
+  },
+  btnTitleStyle: {
+    fontFamily: 'Inter_500Medium',
+    fontSize: 23,
+    marginHorizontal: 51
   }
 })

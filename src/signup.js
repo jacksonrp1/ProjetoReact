@@ -1,13 +1,12 @@
 import { StatusBar } from 'expo-status-bar'
-import React, { useState } from 'react'
-import { Button, Icon } from '@rneui/themed'
+import React, { useState, useContext } from 'react'
+import { Button } from '@rneui/themed'
 import {
   View,
   Text,
-  SafeAreaView,
   ScrollView,
-  TextInput,
-  StyleSheet
+  StyleSheet,
+  KeyboardAvoidingView
 } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import Checkbox from 'expo-checkbox'
@@ -18,41 +17,32 @@ import {
   Inter_300Light
 } from '@expo-google-fonts/inter'
 import ModalTerms from './pages/components/ModalTerms.js'
-import { AntDesign } from '@expo/vector-icons'
-import { MaskedTextInput } from 'react-native-mask-text'
+import querry from './services/querry.js'
+import { url } from '../config.js'
+import TextInputComp from './pages/components/TextInput.js'
+import TextInputMaskComp from './pages/components/TextInputMask.js'
+import Genders from './pages/components/Gender.js'
+import { AuthContext } from './contexts/auth.js'
 
 export default function SignUp() {
-  // ------------para trocar o tipo da senha para text
   const [typePass, setTypePass] = useState(true)
-  const [eye, setEye] = useState('eye-off')
-  // ------------para pegar os dados para cadastro
   const [Name, setName] = useState(null)
   const [userCPF, setUserCPF] = useState(null)
-  const [GenreM, setSelectedGenreM] = useState(false)
-  const [GenreF, setSelectedGenreF] = useState(false)
+  const [Genre, setGenre] = useState('')
   const [BirthDate, setBirthDate] = useState(null)
   const [userPhone, setUserPhone] = useState(null)
   const [userEmail, setUserEmail] = useState(null)
   const [userName, setUserName] = useState(null)
   const [userPass, setUserPass] = useState(null)
-  const [Label, setLabel] = useState([
-    { size: 14, top: '25%', left: 20 },
-    { size: 14, top: '25%', left: 20 },
-    { size: 14, top: '25%', left: 20 },
-    { size: 14, top: '25%', left: 20 },
-    { size: 14, top: '25%', left: 20 },
-    { size: 14, top: '25%', left: 20 },
-    { size: 14, top: '25%', left: 20 }
-  ])
+  const [authRes, setAuthRes] = useState(false)
 
-  //Modal
+  const { ValidateFields } = useContext(AuthContext)
+
   const [terms, setTerms] = useState(false)
   const [screenTerms, setScreenTerms] = useState(false)
-  //validação
-  const [txt, setTxt] = useState(null)
-  const [color, setColor] = useState('#FF1E00')
 
-  // VALIDAÇÃO EMAIL
+  const [txt, setTxt] = useState(null)
+
   let regexEmail = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}')
   let regexCPF = new RegExp('^([0-9]){3}.([0-9]){3}.([0-9]){3}-([0-9]){2}$')
 
@@ -67,309 +57,49 @@ export default function SignUp() {
   return (
     <SafeAreaProvider>
       <ScrollView
-        automaticallyAdjustKeyboardInsets={true}
         contentContainerStyle={{
           minHeight: '100%'
         }}
       >
-        <View style={styles.container}>
+        <KeyboardAvoidingView behavior="padding" style={styles.container}>
           <View style={styles.headerContainer}>
             <Text style={styles.h1Style}>Criar Conta :)</Text>
           </View>
           <View style={styles.inputContainer}>
-            <View style={[styles.Input]}>
-              <Text
-                style={{
-                  position: 'absolute',
-                  color: '#a8a8a8',
-                  backgroundColor: '#F7F5F2',
-                  top: Label[0].top,
-                  left: Label[0].left,
-                  fontSize: Label[0].size,
-                  fontFamily: 'Inter_500Medium'
-                }}
-              >
-                Nome
-              </Text>
-              <TextInput
-                style={{ paddingVertical: Platform.OS === 'ios' ? 11 : 5 }}
-                placeholderTextColor="#a8a8a8"
-                placeholder=""
-                onChangeText={name => {
-                  setName(name)
-                  StyleLabel(name, 0)
-                }}
-                value={Name}
-              />
-            </View>
+            <TextInputComp label={'Nome'} setValue={setName} />
 
-            <View style={[styles.Input]}>
-              <Text
-                style={{
-                  position: 'absolute',
-                  color: '#a8a8a8',
-                  backgroundColor: '#F7F5F2',
-                  top: Label[1].top,
-                  left: Label[1].left,
-                  fontSize: Label[1].size,
-                  fontFamily: 'Inter_500Medium'
-                }}
-              >
-                CPF
-              </Text>
-              <MaskedTextInput
-                style={{ paddingVertical: Platform.OS === 'ios' ? 11 : 5 }}
-                mask="999.999.999-99"
-                placeholder=""
-                placeholderTextColor="#a8a8a8"
-                onChangeText={(cpf, rawText) => {
-                  setUserCPF(cpf)
-                  StyleLabel(cpf, 1)
-                  //setUserCPF(rawText) para pegar o valor sem mascara
-                }}
-                // style={styles.input}
-                keyboardType="numeric"
-                value={userCPF}
-              />
-            </View>
-            <View
-              style={[
-                {
-                  flexDirection: 'row',
-                  justifyContent: 'space-around',
-                  paddingVertical: Platform.OS === 'ios' ? 11 : 8
-                },
-                styles.Input
-              ]}
-            >
-              <Text
-                style={{
-                  position: 'absolute',
-                  color: '#a8a8a8',
-                  backgroundColor: '#F7F5F2',
-                  top: -10,
-                  left: 20,
-                  fontSize: 12,
-                  fontFamily: 'Inter_500Medium'
-                }}
-              >
-                Sexo
-              </Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center'
-                }}
-              >
-                <Checkbox
-                  style={[
-                    styles.checkBox,
-                    { height: 16, width: 16, marginRight: 5 }
-                  ]}
-                  onValueChange={() => {
-                    setSelectedGenreM(true)
-                    setSelectedGenreF(false)
-                  }}
-                  value={GenreM}
-                  color={GenreM ? '#F25719' : undefined}
-                />
-                <Text
-                  onPress={() => {
-                    setSelectedGenreM(true)
-                    setSelectedGenreF(false)
-                  }}
-                  style={{ fontFamily: 'Inter_300Light', fontSize: 14 }}
-                >
-                  Masculino
-                </Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center'
-                }}
-              >
-                <Checkbox
-                  style={[
-                    styles.checkBox,
-                    { height: 16, width: 16, marginRight: 5 }
-                  ]}
-                  onValueChange={() => {
-                    setSelectedGenreF(true)
-                    setSelectedGenreM(false)
-                  }}
-                  value={GenreF}
-                  color={GenreF ? '#F25719' : undefined}
-                />
-                <Text
-                  onPress={() => {
-                    setSelectedGenreF(true)
-                    setSelectedGenreM(false)
-                  }}
-                  style={{ fontFamily: 'Inter_300Light', fontSize: 14 }}
-                >
-                  Feminino
-                </Text>
-              </View>
-            </View>
+            <TextInputMaskComp
+              label={'CPF'}
+              mask={'999.999.999-99'}
+              setValue={setUserCPF}
+            />
 
-            <View style={[styles.Input]}>
-              <Text
-                style={{
-                  position: 'absolute',
-                  color: '#a8a8a8',
-                  backgroundColor: '#F7F5F2',
-                  top: Label[2].top,
-                  left: Label[2].left,
-                  fontSize: Label[2].size,
-                  fontFamily: 'Inter_500Medium'
-                }}
-              >
-                Data de Nascimento
-              </Text>
+            <Genders value={Genre} setValue={setGenre} />
 
-              <MaskedTextInput
-                style={{ paddingVertical: Platform.OS === 'ios' ? 11 : 5 }}
-                placeholderTextColor="#a8a8a8"
-                mask="99/99/9999"
-                placeholder=""
-                onChangeText={(Birth, rawText) => {
-                  setBirthDate(Birth)
-                  StyleLabel(Birth, 2)
-                  //setUnmaskedValue(rawText) para pegar o valor sem mascara
-                }}
-                // style={styles.input}
-                keyboardType="numeric"
-                value={BirthDate}
-              />
-            </View>
+            <TextInputMaskComp
+              label={'Data de Nascimento'}
+              mask={'99/99/9999'}
+              setValue={setBirthDate}
+            />
 
-            <View style={[styles.Input]}>
-              <Text
-                style={{
-                  position: 'absolute',
-                  color: '#a8a8a8',
-                  backgroundColor: '#F7F5F2',
-                  top: Label[3].top,
-                  left: Label[3].left,
-                  fontSize: Label[3].size,
-                  fontFamily: 'Inter_500Medium'
-                }}
-              >
-                Telefone
-              </Text>
+            <TextInputMaskComp
+              label={'Telefone'}
+              mask={'(99) 99999-9999'}
+              setValue={setUserPhone}
+            />
 
-              <MaskedTextInput
-                style={{ paddingVertical: Platform.OS === 'ios' ? 11 : 5 }}
-                placeholderTextColor="#a8a8a8"
-                mask="(99) 99999-9999"
-                placeholder=""
-                onChangeText={phone => {
-                  setUserPhone(phone)
-                  StyleLabel(phone, 3)
-                }}
-                keyboardType="numeric"
-                value={userPhone}
-              />
-            </View>
+            <TextInputComp label={'E-mail'} setValue={setUserEmail} />
 
-            <View style={[styles.Input]}>
-              <Text
-                style={{
-                  position: 'absolute',
-                  color: '#a8a8a8',
-                  backgroundColor: '#F7F5F2',
-                  top: Label[4].top,
-                  left: Label[4].left,
-                  fontSize: Label[4].size,
-                  fontFamily: 'Inter_500Medium'
-                }}
-              >
-                E-mail
-              </Text>
+            <TextInputComp label={'Login'} setValue={setUserName} />
 
-              <TextInput
-                style={{ paddingVertical: Platform.OS === 'ios' ? 11 : 5 }}
-                placeholderTextColor="#a8a8a8"
-                placeholder=""
-                onChangeText={email => {
-                  setUserEmail(email)
-                  StyleLabel(email, 4)
-                }}
-                value={userEmail}
-              />
-            </View>
-
-            <View style={[styles.Input]}>
-              <Text
-                style={{
-                  position: 'absolute',
-                  color: '#a8a8a8',
-                  backgroundColor: '#F7F5F2',
-                  top: Label[5].top,
-                  left: Label[5].left,
-                  fontSize: Label[5].size,
-                  fontFamily: 'Inter_500Medium'
-                }}
-              >
-                Login
-              </Text>
-
-              <TextInput
-                style={{ paddingVertical: Platform.OS === 'ios' ? 11 : 5 }}
-                placeholderTextColor="#a8a8a8"
-                placeholder=""
-                onChangeText={username => {
-                  setUserName(username)
-                  StyleLabel(username, 5)
-                }}
-                value={userName}
-              />
-            </View>
-
-            <View style={[styles.Input]}>
-              <Text
-                style={{
-                  position: 'absolute',
-                  color: '#a8a8a8',
-                  backgroundColor: '#F7F5F2',
-                  top: Label[6].top,
-                  left: Label[6].left,
-                  fontSize: Label[6].size,
-                  fontFamily: 'Inter_500Medium'
-                }}
-              >
-                Senha
-              </Text>
-              <TextInput
-                style={{ paddingVertical: Platform.OS === 'ios' ? 11 : 5 }}
-                placeholderTextColor="#a8a8a8"
-                placeholder=""
-                secureTextEntry={typePass}
-                onChangeText={password => {
-                  setUserPass(password)
-                  StyleLabel(password, 6)
-                }}
-                value={userPass}
-              />
-
-              <View
-                style={{
-                  position: 'absolute',
-                  right: 10,
-                  top: 9,
-                  zIndex: 1
-                }}
-              >
-                <Icon
-                  type="feather"
-                  size={22}
-                  name={eye}
-                  onPress={() => validationTypePass()}
-                />
-              </View>
-            </View>
+            <TextInputComp
+              label={'Senha'}
+              setValue={setUserPass}
+              tipo={typePass}
+              display="flex"
+            />
           </View>
+
           <View style={styles.containerCheckBox}>
             <Checkbox
               style={styles.checkBox}
@@ -387,73 +117,52 @@ export default function SignUp() {
               Li e aceito os termos
             </Text>
           </View>
-          {/* MOTAL TERMO */}
+
           <ModalTerms
             screenTermsVisible={screenTerms}
             SetScreenTermsVisible={setScreenTerms}
             setTermBoolean={setTerms}
           />
-          {/* TEXT PARA VALIDAÇÃO */}
+
           <Text
             style={{
-              color: color,
+              color: !authRes ? '#FF1E00' : '#5FD068',
               fontFamily: 'Inter_500Medium'
             }}
-            value={txt}
           >
             {txt}
           </Text>
+
           <View style={styles.buttonContainer}>
             <Button
-              buttonStyle={{ backgroundColor: '#F25719', borderRadius: 25 }}
+              buttonStyle={styles.btnStyle}
               title="inscrever-se"
-              titleStyle={{
-                fontFamily: 'Inter_900Black',
-                fontSize: 23,
-                marginHorizontal: 51
-              }}
+              titleStyle={styles.btnTitleStyle}
               onPress={() => {
-                if (ValidateFields()) {
-                  createUser(
-                    JSON.stringify({
-                      name: Name,
-                      cpf: userCPF,
-                      genero: GenreM ? 'Masculino' : 'Feminino',
-                      birth: BirthDate,
-                      phone: userPhone,
-                      email: userEmail,
-                      username: userName,
-                      password: userPass
-                    })
-                  )
+                if (ValidateField()) {
+                  let body = JSON.stringify({
+                    name: Name,
+                    cpf: userCPF,
+                    genero: Genre,
+                    birth: BirthDate,
+                    phone: userPhone,
+                    email: userEmail,
+                    username: userName,
+                    password: userPass
+                  })
+                  // querry.addUser(dados).then(user => {
+                  //   console.log(user)
+                  // })
+                  createUser(body)
                 }
               }}
             />
           </View>
-        </View>
+          <StatusBar style="auto" />
+        </KeyboardAvoidingView>
       </ScrollView>
     </SafeAreaProvider>
   )
-  //style title label
-  function StyleLabel(input, index) {
-    if (input === '' || input === null) {
-      Label[index].top = '25%'
-      Label[index].size = 14
-    } else {
-      Label[index].top = -10
-      Label[index].size = 12
-    }
-  }
-  //Validação para trocar o tipo do password para tipo texto e trocar icone do eye
-  function validationTypePass() {
-    if (typePass) {
-      setTypePass(false)
-      setEye('eye')
-    } else {
-      setTypePass(true)
-      setEye('eye-off')
-    }
-  }
   // Validação de idade
   function ValidadAge(birth) {
     var df = new Date(birth)
@@ -473,14 +182,14 @@ export default function SignUp() {
     let year = txt.substring(6)
     return year + '/' + month + '/' + day
   }
-  function ValidateFields() {
-    if (Name == null || Name == '') {
+  function ValidateField() {
+    if (Name.length === 0) {
       setTxt('Nome inválido.')
       return false
     } else if (!regexCPF.test(userCPF)) {
       setTxt('CPF inválido.')
       return false
-    } else if (!GenreF && !GenreM) {
+    } else if (Genre.length === 0) {
       setTxt('Sexo inválido.')
       return false
     } else if (BirthDate.length != 10) {
@@ -489,20 +198,16 @@ export default function SignUp() {
     } else if (!ValidadAge(BirthDate)) {
       setTxt('Não aceitamos menores de 18 anos.')
       return false
-    } else if (userPhone == null || userEmail == '' || userPhone.length != 15) {
+    } else if (userPhone.length != 15) {
       setTxt('Telefone inválido.')
       return false
-    } else if (
-      userEmail == null ||
-      userEmail == '' ||
-      !regexEmail.test(userEmail)
-    ) {
+    } else if (userEmail.length === 0 || !regexEmail.test(userEmail)) {
       setTxt('E-mail inválido.')
       return false
-    } else if (userName == null || userName == '') {
+    } else if (userName.length === 0) {
       setTxt('Login inválido.')
       return false
-    } else if (userPass == null || userPass == '') {
+    } else if (userPass.length === 0) {
       setTxt('Senha inválida.')
       return false
     } else if (!terms) {
@@ -514,8 +219,8 @@ export default function SignUp() {
     }
   }
 
-  async function createUser(user) {
-    let req = await fetch(`http://192.168.1.100:8000/cadastro`, {
+  async function createUser(body) {
+    let req = await fetch(`${url}/cadastro`, {
       cache: 'default',
       headers: {
         'Content-Type': 'application/json',
@@ -523,30 +228,19 @@ export default function SignUp() {
       },
       method: 'POST',
       mode: 'cors',
-      body: user
+      body: body
     })
-    let res = await req.json()
-    validationRegistration(res)
-  }
-  function validationRegistration(response) {
-    if (response.bol == true) {
-      setColor('#5FD068')
-      setTxt(response.resp)
-
-      setName(null)
-      setUserCPF(null)
-      setSelectedGenreM(false)
-      setSelectedGenreF(false)
-      setBirthDate(null)
-      setUserPhone(null)
-      setUserEmail(null)
-      setUserName(null)
-      setUserPass(null)
-      setTerms(false)
-    } else if (response.bol == false) {
-      setColor('#FF1E00')
-      setTxt(response.resp)
-    }
+    let res = await req
+      .json()
+      .then(resp => {
+        setAuthRes(resp.auth)
+        if (resp.auth) {
+          ValidateFields(userName, userPass, setTxt)
+        } else {
+          setTxt(resp.resp)
+        }
+      })
+      .catch(err => {})
   }
 }
 
@@ -582,18 +276,23 @@ const styles = StyleSheet.create({
     width: 20,
     borderColor: '#a8a8a8',
     borderWidth: 1,
-    color: '#F25719'
+    color: '#F25719',
+    height: 16,
+    width: 16,
+    marginRight: 5
   },
   buttonContainer: {
     width: '100%',
     alignItems: 'center'
   },
-  Input: {
-    // height: 42,
-    borderWidth: 1,
-    marginBottom: 10,
-    borderRadius: 5,
-    borderColor: '#a8a8a8',
-    paddingHorizontal: 20
+  btnStyle: {
+    backgroundColor: '#F25719',
+    borderRadius: 25,
+    paddingHorizontal: 25
+  },
+  btnTitleStyle: {
+    fontFamily: 'Inter_500Medium',
+    fontSize: 23,
+    marginHorizontal: 51
   }
 })

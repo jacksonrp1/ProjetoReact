@@ -75,13 +75,9 @@ export default function ModalTerms({
           </SafeAreaView>
           <View style={styles.buttons}>
             <Button
-              buttonStyle={{
-                backgroundColor: '#F25719',
-                borderRadius: 25,
-                paddingHorizontal: 25
-              }}
+              buttonStyle={styles.btnStyle}
               titleStyle={{
-                fontFamily: 'Inter_900Black'
+                fontFamily: 'Inter_500Medium'
               }}
               onPress={() => {
                 setTermBoolean(true)
@@ -97,7 +93,7 @@ export default function ModalTerms({
                 paddingHorizontal: 25
               }}
               titleStyle={{
-                fontFamily: 'Inter_900Black'
+                fontFamily: 'Inter_500Medium'
               }}
               onPress={() => {
                 setTermBoolean(false)
@@ -153,6 +149,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     width: '100%'
+  },
+  btnStyle: {
+    backgroundColor: '#F25719',
+    borderRadius: 25,
+    paddingHorizontal: 25
   }
-  //#endregion
 })
