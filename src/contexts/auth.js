@@ -9,6 +9,7 @@ function AuthProvider({ children }) {
   const [userName, setUserName] = useState()
   const [userPass, setUserPass] = useState()
   const [dadosUser, setDadosUser] = useState({})
+  const [extratoUser, setExtratoUser] = useState({})
   const navigation = useNavigation()
 
   function ValidateFields(userName, userPass, setValue) {
@@ -34,31 +35,36 @@ function AuthProvider({ children }) {
             password: userPass
           })
         })
-        let res = await req
-          .json()
-          .then(resp => {
-            //SE RESPOSTA FOR TRUE
-            if (resp.auth) {
-              //ARMAZENA O TOKEN NO STORAGE
-              storage
-                .storageSet(resp.token)
-                .then(user => {})
-                .catch(err => {})
-              //LOGA O USUÁRIO
-              setValue('')
-              navigation.navigate('Routes')
-              setDadosUser(resp.dadosUser)
-            } else {
-              setValue('Login ou senha inválido.')
-            }
-          })
-          .catch(err => {})
+        let res = await req.json()
+        //SE RESPOSTA FOR TRUE
+        if (res.auth) {
+          //ARMAZENA O TOKEN NO STORAGE
+          storage
+            .storageSet(res.token)
+            .then(user => {})
+            .catch(err => {})
+          //LOGA O USUÁRIO
+          setValue('')
+          setDadosUser(res.dadosUser)
+
+          getExtrato(res.dadosUser.id)
+          navigation.navigate('Routes')
+        } else {
+          setValue('Login ou senha inválido.')
+        }
       }
     }
   }
+  async function getExtrato(idUser) {
+    const req = await fetch(`${url}/carteira/${idUser}`)
+    const res = await req.json()
+    setExtratoUser(res.ext)
+  }
 
   return (
-    <AuthContext.Provider value={{ ValidateFields, dadosUser, navigation }}>
+    <AuthContext.Provider
+      value={{ ValidateFields, dadosUser, extratoUser, navigation }}
+    >
       {children}
     </AuthContext.Provider>
   )
