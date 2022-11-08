@@ -18,8 +18,6 @@ export default function Profile() {
   const [userId, setUserId] = useState(null)
   const { dadosUser, navigation } = useContext(AuthContext)
 
-  useEffect(() => {}, [])
-
   let [fotsLoaded] = useFonts({
     Inter_900Black,
     Inter_500Medium,
