@@ -4,9 +4,9 @@
 ### O projeto tem como fundamento a utilização da linguagem __React Native__ para desenvolvimento Mobile, para isso, desenvolvemos um aplicativo de "apostas" onde o usuário pode realizar apostas com dinheiro real em jogos como roleta, dados e cartas obtendo lucro caso ganhe sua aposta. Este projeto foi realizado como metodológia de aprendizado para a matéria de "Programação para dispositivos móveis em Android" no 2° semestre do ano de 2022.
 OBS: Ressaltamos que tinhamos 0 conhecimento de ReactNative antes de iniciar o projeto, tenha compaixão pelos pobres mortais 😀, todo conhecimento aplicado foi obtido atráves de vídeo-aulas e praticas.
 ## Pré-Requisitos:
-Instalação:
+Após a clonagem do repositório execute:
 ```
-Após a clonagem do repositório execute npm install ou yarn install.
+npm install ou yarn install.
 ```
 Comandos a serem executados no terminal:
 ```
