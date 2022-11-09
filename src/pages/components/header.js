@@ -56,8 +56,6 @@ export default function Header() {
               R${' '}
               {showValue
                 ? dadosUser.valor
-                  ? dadosUser.valor
-                  : '0.00'
                 : '****'}
             </Text>
           </View>
