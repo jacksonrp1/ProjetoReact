@@ -30,7 +30,7 @@ const imgSlides = [
   }
 ]
 // estilo de components
-export default function Jogos() {
+export default function Jogos({ navigation }) {
   function renderSlides({ item }) {
     return (
       <View style={{ flex: 1, marginTop: '10%' }}>
@@ -43,7 +43,11 @@ export default function Jogos() {
           }}
         />
         <Text style={styles.playNow}>{item.title}</Text>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate('Roleta')
+          }}
+        >
           <Text style={[styles.playNow, { fontSize: 20 }]}>{item.text}</Text>
         </TouchableOpacity>
       </View>

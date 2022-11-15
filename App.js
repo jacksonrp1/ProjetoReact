@@ -8,6 +8,7 @@ import Started from './src/getStarted'
 import SignIn from './src/signin'
 import SignUp from './src/signup'
 import Routes from './src/routes.js'
+import roleta from './src/pages/jogos/Roleta/roleta'
 import ForgotPassword from './src/ForgotPassword.js'
 import ReplacePassword from './src/ReplacePassword.js'
 
@@ -57,6 +58,11 @@ export default function App() {
             <Tab.Screen
               name="SignUp"
               component={SignUp}
+              options={styles.optsTab}
+            />
+            <Tab.Screen
+              name="Roleta"
+              component={roleta.App}
               options={styles.optsTab}
             />
           </Tab.Navigator>

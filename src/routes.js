@@ -3,7 +3,7 @@ import { StyleSheet } from 'react-native'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 
 // ROUTES
-import Investimento from './pages/investimento/investimento.js'
+import Investimento from './pages/investimento/Investimento.js'
 import Extrato from './pages/extrato/extrato.js'
 import Jogos from './pages/jogos/jogos.js'
 import Perfil from './pages/perfil/perfil.js'

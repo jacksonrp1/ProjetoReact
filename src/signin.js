@@ -1,7 +1,13 @@
 import React, { useState, useContext } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { Button } from '@rneui/themed'
-import { View, Text, StyleSheet, KeyboardAvoidingView } from 'react-native'
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator
+} from 'react-native'
 import {
   useFonts,
   Inter_900Black,
@@ -13,8 +19,8 @@ import TextInputComp from './pages/components/TextInput.js'
 export default function SignIn({ navigation }) {
   const [userName, setUserName] = useState(null)
   const [userPass, setUserPass] = useState(null)
-  const [txt, setTxt] = useState(null)
-  const { ValidateFields } = useContext(AuthContext)
+  const [txt, setTxt] = useState({ auth: true, resp: '' })
+  const { validationUser } = useContext(AuthContext)
 
   let [fotsLoaded] = useFonts({
     Inter_900Black,
@@ -24,69 +30,94 @@ export default function SignIn({ navigation }) {
     return null
   }
   return (
-    <KeyboardAvoidingView
+    <ScrollView
+      contentContainerStyle={{ height: '100%' }}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.container}
     >
-      <View style={styles.headerContainer}>
-        <Text style={styles.h1Style}>Bem vindo de volta!</Text>
-        <Text style={styles.h4Style}>Digite seu Login e Senha</Text>
+      <View style={styles.container}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.h1Style}>Bem vindo de volta!</Text>
+          <Text style={styles.h4Style}>Digite seu Login e Senha</Text>
+        </View>
+
+        <View style={styles.inputContainer}>
+          <TextInputComp label={'Login'} tipo={false} setValue={setUserName} />
+
+          <TextInputComp
+            label={'Senha'}
+            tipo={true}
+            setValue={setUserPass}
+            display="flex"
+          />
+          <View style={{ height: 50 }}>
+            {!txt.auth ? (
+              <ActivityIndicator size={30} color="#000" />
+            ) : (
+              <Text
+                style={{
+                  color: '#FF1E00',
+                  fontFamily: 'Inter_500Medium'
+                }}
+              >
+                {txt.resp}
+              </Text>
+            )}
+          </View>
+        </View>
+
+        <View style={styles.buttonContainer}>
+          <Button
+            disabled={!txt.auth}
+            buttonStyle={styles.btnStyle}
+            title="Conecte-se"
+            titleStyle={styles.btnTitleStyle}
+            containerStyle={{
+              marginBottom: 18
+            }}
+            onPress={() => {
+              if (validaLogin()) {
+                setTxt({ auth: false, resp: '' })
+                validationUser(userName, userPass, setTxt)
+                limpaCampos()
+              }
+              // querry.selListUsers().then(user => {
+              //   console.log(user)
+              // })
+            }}
+          />
+          <Text
+            onPress={() => navigation.navigate('ForgotPassword')}
+            style={styles.h2Style}
+          >
+            Esqueceu a senha?
+          </Text>
+          <Text
+            onPress={() => {
+              navigation.navigate('SignUp')
+            }}
+            style={styles.h5Style}
+          >
+            Ou crie uma nova conta
+          </Text>
+        </View>
       </View>
-
-      <View style={styles.inputContainer}>
-        <TextInputComp label={'Login'} tipo={false} setValue={setUserName} />
-
-        <TextInputComp
-          label={'Senha'}
-          tipo={true}
-          setValue={setUserPass}
-          display="flex"
-        />
-
-        <Text
-          style={{
-            color: '#FF1E00',
-            fontFamily: 'Inter_500Medium'
-          }}
-        >
-          {txt}
-        </Text>
-      </View>
-
-      <View style={styles.buttonContainer}>
-        <Button
-          buttonStyle={styles.btnStyle}
-          title="Conecte-se"
-          titleStyle={styles.btnTitleStyle}
-          containerStyle={{
-            marginBottom: 18
-          }}
-          onPress={() => {
-            ValidateFields(userName, userPass, setTxt)
-            // querry.selListUsers().then(user => {
-            //   console.log(user)
-            // })
-          }}
-        />
-        <Text
-          onPress={() => navigation.navigate('ForgotPassword')}
-          style={styles.h2Style}
-        >
-          Esqueceu a senha?
-        </Text>
-        <Text
-          onPress={() => {
-            navigation.navigate('SignUp')
-          }}
-          style={styles.h5Style}
-        >
-          Ou crie uma nova conta
-        </Text>
-      </View>
-
       <StatusBar style="auto" />
-    </KeyboardAvoidingView>
+    </ScrollView>
   )
+  function validaLogin() {
+    if (userName == '' || userName == null) {
+      setTxt({ auth: false, resp: 'Login inválido.' })
+      return false
+    } else if (userPass == '' || userPass == null) {
+      setTxt({ auth: false, resp: 'Senha inválida.' })
+      return false
+    } else {
+      return true
+    }
+  }
+  function limpaCampos() {
+    setTxt({ auth: false, resp: '' })
+  }
 }
 const styles = StyleSheet.create({
   container: {

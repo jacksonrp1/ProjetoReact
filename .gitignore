@@ -1,4 +1,4 @@
-Controller.js
+
 
 # OSX
 #
@@ -55,5 +55,4 @@ buck-out/
 .expo/
 web-build/
 dist/
-config.js
 host.json

@@ -34,14 +34,14 @@ export default function SignUp() {
   const [userEmail, setUserEmail] = useState(null)
   const [userName, setUserName] = useState(null)
   const [userPass, setUserPass] = useState(null)
-  const [authRes, setAuthRes] = useState(false)
 
-  const { ValidateFields } = useContext(AuthContext)
+  const { validationUser } = useContext(AuthContext)
 
   const [terms, setTerms] = useState(false)
   const [screenTerms, setScreenTerms] = useState(false)
 
   const [txt, setTxt] = useState(null)
+  const [resp, setResp] = useState({ auth: false, resp: '' })
 
   let regexEmail = new RegExp('[a-z0-9]+@[a-z]+.[a-z]{2,3}')
   let regexCPF = new RegExp('^([0-9]){3}.([0-9]){3}.([0-9]){3}-([0-9]){2}$')
@@ -126,11 +126,11 @@ export default function SignUp() {
 
           <Text
             style={{
-              color: !authRes ? '#FF1E00' : '#5FD068',
+              color: !resp.auth ? '#FF1E00' : '#5FD068',
               fontFamily: 'Inter_500Medium'
             }}
           >
-            {txt}
+            {resp.resp}
           </Text>
 
           <View style={styles.buttonContainer}>
@@ -183,31 +183,35 @@ export default function SignUp() {
     return year + '/' + month + '/' + day
   }
   function ValidateField() {
-    if (Name.length === 0) {
+    if (Name == null || Name.length === 0) {
       setTxt('Nome inválido.')
       return false
     } else if (!regexCPF.test(userCPF)) {
       setTxt('CPF inválido.')
       return false
-    } else if (Genre.length === 0) {
+    } else if (Genre == null || Genre.length === 0) {
       setTxt('Sexo inválido.')
       return false
-    } else if (BirthDate.length != 10) {
+    } else if (BirthDate == null || BirthDate.length != 10) {
       setTxt('Data de aniversário inválido.')
       return false
     } else if (!ValidadAge(BirthDate)) {
       setTxt('Não aceitamos menores de 18 anos.')
       return false
-    } else if (userPhone.length != 15) {
+    } else if (userPhone == null || userPhone.length != 15) {
       setTxt('Telefone inválido.')
       return false
-    } else if (userEmail.length === 0 || !regexEmail.test(userEmail)) {
+    } else if (
+      userEmail == null ||
+      userEmail.length === 0 ||
+      !regexEmail.test(userEmail)
+    ) {
       setTxt('E-mail inválido.')
       return false
-    } else if (userName.length === 0) {
+    } else if (userName == null || userName.length === 0) {
       setTxt('Login inválido.')
       return false
-    } else if (userPass.length === 0) {
+    } else if (userPass == null || userPass.length === 0) {
       setTxt('Senha inválida.')
       return false
     } else if (!terms) {
@@ -230,17 +234,12 @@ export default function SignUp() {
       mode: 'cors',
       body: body
     })
-    let res = await req
-      .json()
-      .then(resp => {
-        setAuthRes(resp.auth)
-        if (resp.auth) {
-          ValidateFields(userName, userPass, setTxt)
-        } else {
-          setTxt(resp.resp)
-        }
-      })
-      .catch(err => {})
+    let res = await req.json()
+    if (res.auth) {
+      validationUser(userName, userPass, setResp)
+    } else {
+      setResp(res)
+    }
   }
 }
 

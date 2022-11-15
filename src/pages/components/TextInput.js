@@ -12,7 +12,8 @@ export default function TextInputComp({
   label,
   tipo = false,
   setValue,
-  display = 'none'
+  display = 'none',
+  teclado = 'default'
 }) {
   const [Label, setLabel] = useState([{ size: 14, top: '25%', left: 20 }])
   const [typePass, setTypePass] = useState(tipo)
@@ -41,6 +42,7 @@ export default function TextInputComp({
         {label}
       </Text>
       <TextInput
+        keyboardType={teclado}
         style={{ paddingVertical: Platform.OS === 'ios' ? 11 : 5 }}
         onChangeText={value => {
           setValue(value)

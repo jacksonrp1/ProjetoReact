@@ -23,7 +23,7 @@ const statusBarHeight = StatusBar.currentHeight
   : 64
 
 export default function Header() {
-  const { dadosUser } = useContext(AuthContext)
+  const { dadosUser, saldoUser } = useContext(AuthContext)
   const [showValue, setShowValue] = useState(false)
   let [fotsLoaded] = useFonts({
     Inter_900Black,
@@ -37,10 +37,7 @@ export default function Header() {
     <View style={styles.container}>
       <View style={styles.content}>
         <View>
-          <Text style={styles.username}>{`Olá ${dadosUser.nome.substring(
-            0,
-            dadosUser.nome.indexOf(' ')
-          )}`}</Text>
+          <Text style={styles.username}>{`Olá ${dadosUser.nome}`}</Text>
 
           <View style={styles.wallet}>
             <Entypo
@@ -53,10 +50,7 @@ export default function Header() {
             />
 
             <Text style={styles.dinheiro}>
-              R${' '}
-              {showValue
-                ? dadosUser.valor
-                : '****'}
+              R$ {showValue ? saldoUser.valor : '****'}
             </Text>
           </View>
         </View>

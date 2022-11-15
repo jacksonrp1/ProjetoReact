@@ -6,54 +6,55 @@ import { useNavigation } from '@react-navigation/native'
 export const AuthContext = createContext({})
 
 function AuthProvider({ children }) {
-  const [userName, setUserName] = useState()
-  const [userPass, setUserPass] = useState()
   const [dadosUser, setDadosUser] = useState({})
   const [extratoUser, setExtratoUser] = useState({})
+  const [saldoUser, setSaldoUser] = useState({})
   const navigation = useNavigation()
 
-  function ValidateFields(userName, userPass, setValue) {
-    if (userName == '' || userName == null) {
-      setValue('Login inválido.')
-    } else if (userPass == '' || userPass == null) {
-      setValue('Senha inválida.')
-    } else {
-      setUserName(userName)
-      setUserPass(userPass)
-      validationUser()
-      async function validationUser() {
-        let req = await fetch(`${url}/login`, {
-          cache: 'default',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json'
-          },
-          method: 'POST',
-          mode: 'cors',
-          body: JSON.stringify({
-            username: userName,
-            password: userPass
-          })
-        })
-        let res = await req.json()
-        //SE RESPOSTA FOR TRUE
-        if (res.auth) {
-          //ARMAZENA O TOKEN NO STORAGE
-          storage
-            .storageSet(res.token)
-            .then(user => {})
-            .catch(err => {})
-          //LOGA O USUÁRIO
-          setValue('')
-          setDadosUser(res.dadosUser)
+  async function validationUser(login, senha, setValue) {
+    let req = await fetch(`${url}/login`, {
+      cache: 'default',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      method: 'POST',
+      mode: 'cors',
+      body: JSON.stringify({
+        username: login,
+        password: senha
+      })
+    })
+    let res = await req.json()
+    //SE RESPOSTA FOR TRUE
+    if (res.auth) {
+      //ARMAZENA O TOKEN NO STORAGE
+      storage
+        .storageSet(res.token)
+        .then(user => {})
+        .catch(err => {})
+      //LOGA O USUÁRIO
+      setValue({ auth: true, resp: '' })
 
-          getExtrato(res.dadosUser.id)
-          navigation.navigate('Routes')
-        } else {
-          setValue('Login ou senha inválido.')
-        }
-      }
+      //Pega todos os dados do usuário
+      setDadosUser(res.dadosUser)
+
+      //Pega Extrato do usuário
+      getExtrato(res.dadosUser.id)
+
+      //Pega Saldo do usuário
+      getSaldo(res.dadosUser.id)
+
+      navigation.navigate('Routes')
+    } else {
+      setValue({ auth: true, resp: 'Login ou senha inválido.' })
     }
+  }
+
+  async function getSaldo(idUser) {
+    const req = await fetch(`${url}/financeiroAtualiza/${idUser}`)
+    const res = await req.json()
+    setSaldoUser(res.resp)
   }
   async function getExtrato(idUser) {
     const req = await fetch(`${url}/carteira/${idUser}`)
@@ -63,7 +64,15 @@ function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider
-      value={{ ValidateFields, dadosUser, extratoUser, navigation }}
+      value={{
+        validationUser,
+        dadosUser,
+        saldoUser,
+        extratoUser,
+        navigation,
+        getSaldo,
+        getExtrato
+      }}
     >
       {children}
     </AuthContext.Provider>

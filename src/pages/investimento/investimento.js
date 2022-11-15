@@ -5,11 +5,11 @@ import Body from './InvestimentoBody.js'
 import Actions from './actions'
 import { AuthContext } from '../../contexts/auth.js'
 export default function Home() {
-  const { dadosUser } = useContext(AuthContext)
+  const { saldoUser } = useContext(AuthContext)
   return (
     <View style={styles.container}>
       <Header />
-      <Body saldo={dadosUser.valor} perdas="0" ganhos="0" />
+      <Body saldo={saldoUser.valor} perdas="0" ganhos="0" />
       <Actions />
     </View>
   )
